@@ -1,0 +1,17 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "C:\\Users\\nickp\\Documents\\Arduino\\hardware\\espressif\\esp32\\**",
+                "C:\\Program Files (x86)\\Arduino\\hardware\\tools\\**",
+                "C:\\Program Files (x86)\\Arduino\\libraries\\**",
+                "C:\\Users\\nickp\\Documents\\Arduino\\libraries\\**",
+                "${workspaceFolder}/**"
+            ],
+            "forcedInclude": [],
+            "intelliSenseMode": "clang-x64"
+        }
+    ],
+    "version": 4
+}
