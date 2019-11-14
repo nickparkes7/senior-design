@@ -1,6 +1,10 @@
 #include <Arduino.h>
 #include <WiFi.h>
 #include <WiFiUdp.h>
+#include <SoftwareSerial.h>
+#include <SerialCommand.h>
+
+SerialCommand sCmd;
 
 // Set up WiFi UDP connection
 const char* ssid = "iPhone";
@@ -12,15 +16,21 @@ IPAddress myIPaddress(192, 168, 1, 157);
 IPAddress targetIPaddress(192, 168, 1, 156);
 
 // Setting up the packets for sending and receiving
-const int UDP_PACKET_SIZE = 2;
+const int UDP_PACKET_SIZE = 4;
 char sendBuffer[UDP_PACKET_SIZE];
 
 void setup() {
-  pinMode(36, INPUT);                        // x input pin
-  pinMode(39, INPUT);                        // y input pin
+//   Serial input from Yonah goes here
+//   pinMode(36, INPUT);                        // x input pin
+//   pinMode(39, INPUT);                        // y input pin
 
   // Set up serial connection
-  Serial.begin(115200);
+  Serial.begin(9600);
+  while (!Serial);
+
+  sCmd.addCommand("PING", pingHandler);
+
+
   Serial.print("Connecting to "); Serial.println(ssid);
 
   // Configure WiFi
@@ -39,7 +49,23 @@ void setup() {
   
 }
 
+void pingHandler (const char *command) {
+  Serial.println("PONG");
+}
+
+void echoHandler () {
+  char *arg;
+  arg = sCmd.next();
+  if (arg != NULL)
+    Serial.println(arg);
+  else
+    Serial.println("nothing to echo");
+}
+
 void loop() {
+
+  if (Serial.availible() > 0) sCmd.readSerial();
+
   int x = analogRead(36) + 10;  // x input - adding 10 so that we never send a 0 and mess up the receive function with a null termination
   float x_value = (float) x;    // convert value to float
   byte x_byte = (byte) x_value; // cast it as a byte

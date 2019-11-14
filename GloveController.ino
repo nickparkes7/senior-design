@@ -16,8 +16,10 @@ IPAddress myIP(192, 168, 1, 156);                // glove IP
 
 // Constants for ledc analog writing
 int freq = 150;
-int pump1Pin = 0;                             // First pump mapped to channel 0
-int pump2Pin = 1;                             // Second pump mapped to channel 1
+int pump1Pin = 0;
+int pump2Pin = 1;    
+int pump3Pin = 2;
+int pump4Pin = 3;
 int resolution_bits = 8;
 int resolution = ((1<<resolution_bits)-1);
 
