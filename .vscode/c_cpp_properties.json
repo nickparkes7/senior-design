@@ -10,12 +10,16 @@
                 "C:\\Program Files (x86)\\Arduino\\libraries\\**",
                 "C:\\Users\\nickp\\Documents\\Arduino\\libraries\\**",
                 "C:\\Users\\nickp\\Documents\\Arduino\\SerialCommand\\**",
+                "C:\\Users\\nickp\\Documents\\Arduino\\servo\\**",
                 "${workspaceFolder}/**"
             ],
             "forcedInclude": [
                 "C:\\Program Files (x86)\\Arduino\\hardware\\arduino\\avr\\cores\\arduino\\Arduino.h"
             ],
-            "intelliSenseMode": "clang-x64"
+            "intelliSenseMode": "clang-x64",
+            "defines": [
+                "USBCON"
+            ]
         }
     ],
     "version": 4

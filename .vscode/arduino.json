@@ -1,4 +1,6 @@
 {
-    "sketch": "controller.ino",
+    "configuration": "FlashFreq=80,UploadSpeed=921600",
+    "port": "COM12",
+    "sketch": "GloveController.ino",
     "board": "arduino:avr:uno"
 }
