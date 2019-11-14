@@ -9,7 +9,6 @@
                 "C:\\Program Files (x86)\\Arduino\\hardware\\tools\\**",
                 "C:\\Program Files (x86)\\Arduino\\libraries\\**",
                 "C:\\Users\\nickp\\Documents\\Arduino\\libraries\\**",
-                "C:\\Users\\nickp\\Documents\\Arduino\\SerialCommand\\**",
                 "C:\\Users\\nickp\\Documents\\Arduino\\servo\\**",
                 "${workspaceFolder}/**"
             ],
