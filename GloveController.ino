@@ -18,7 +18,7 @@ const char* password = "mechatronics";
 
 WiFiUDP udp;
 unsigned int receivePort = 2808;                 // Arbitrary port for receiving
-const unsigned int UDP_PACKET_SIZE = 4;          // Size of packets
+const unsigned int UDP_PACKET_SIZE = 1;          // Size of packets
 byte receiveBuffer[UDP_PACKET_SIZE + 1];         // Packet of joystick data 
 
 IPAddress myIP(192, 168, 1, 156);                // glove IP
@@ -59,6 +59,7 @@ void setup() {
   receiveBuffer[UDP_PACKET_SIZE] = 0;
 }
 
+int i = 0;
 void loop() {
 
   // Receive data continuously from VR Interface -- take in as 1 byte string
@@ -68,18 +69,42 @@ void loop() {
   }
 
   // Remove 10 added before sending
-  byte received = receiveBuffer[0] - 10
+  byte received = receiveBuffer[0] - 10;
 
-  byte out1 = received && 0b00000001;
-  byte out2 = received && 0b00000010;
-  byte out3 = received && 0b00000100;
-  byte out4 = received && 0b00001000;
+  byte out1_byte = received && 0b00000001;
+  byte out2_byte = received && 0b00000010;
+  byte out3_byte = received && 0b00000100;
+  byte out4_byte = received && 0b00001000;
+
+  if (out1_byte != 0) {
+      out1 = 180;
+  } else {
+      out1 = 0;
+  }
+
+  if (out2_byte != 0) {
+      out2 = 180;
+  } else {
+      out2 = 0;
+  }
+
+  if (out3_byte != 0) [
+      out3 = 180;
+  ] else {
+      out3 = 0;
+  }
+
+  if (out4_byte != 0) {
+      out4 = 180;
+  } else {
+      out4 = 0;
+  }
 
   // Output values to motor
   servo1.write(out1);
   servo2.write(out2);
-  servo3.write(out3);
-  servo4.write(out4);
+  // servo3.write(out3);
+  // servo4.write(out4);
 }
 
 

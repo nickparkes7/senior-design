@@ -1,100 +1,74 @@
-// #include <Arduino.h>
-// #include <WiFi.h>
-// #include <WiFiUdp.h>
-// #include <SoftwareSerial.h>
-// #include <SerialCommand.h>
+#include <Arduino.h>
+#include <WiFi.h>
+#include <WiFiUdp.h>
+#include <SoftwareSerial.h>
+#include <SerialCommand.h>
 
-// SerialCommand sCmd;
+SerialCommand sCmd;
 
-// // Set up WiFi UDP connection
-// const char* ssid = "iPhone";
-// const char* password = "mechatronics";
+// Set up WiFi UDP connection
+const char* ssid = "iPhone";
+const char* password = "mechatronics";
 
-// WiFiUDP UDPTestServer;
-// unsigned int sendPort = 2808;                // send port - this is the other controller's receive port
-// IPAddress myIPaddress(192, 168, 1, 157);
-// IPAddress targetIPaddress(192, 168, 1, 156);
+WiFiUDP UDPTestServer;
+unsigned int sendPort = 2808;                // send port - this is the other controller's receive port
+IPAddress myIPaddress(192, 168, 1, 157);
+IPAddress targetIPaddress(192, 168, 1, 156);
 
-// // Setting up the packets for sending and receiving
-// const int UDP_PACKET_SIZE = 4;
-// char sendBuffer[UDP_PACKET_SIZE];
+// Setting up the packets for sending and receiving
+const int UDP_PACKET_SIZE = 1;
+char sendBuffer[UDP_PACKET_SIZE];
 
-// void setup() {
-// //   Serial input from Yonah goes here
-// //   pinMode(36, INPUT);                        // x input pin
-// //   pinMode(39, INPUT);                        // y input pin
+void setup() {
 
-//   // Set up serial connection
-//   Serial.begin(9600);
-//   while (!Serial);
+  // Set up serial connection
+  Serial.begin(9600);
+  while (!Serial);
 
-//   sCmd.addCommand("PING", pingHandler);
+  sCmd.addCommand("PING", pingHandler);
 
+  Serial.print("Connecting to "); Serial.println(ssid);
 
-//   Serial.print("Connecting to "); Serial.println(ssid);
+  // Configure WiFi
+  WiFi.config(myIPaddress, IPAddress(192, 168, 1, 1), 
+  IPAddress(255, 255, 255, 0));
+  WiFi.begin(ssid, password);
+  UDPTestServer.begin(sendPort);
 
-//   // Configure WiFi
-//   WiFi.config(myIPaddress, IPAddress(192, 168, 1, 1), 
-//   IPAddress(255, 255, 255, 0));
-//   WiFi.begin(ssid, password);
-//   UDPTestServer.begin(sendPort);
-
-//   // Wait until the wifi is connected
-//   while(WiFi.status() != WL_CONNECTED) {
-//       delay(500);
-//       Serial.print(".");
-//   }
-//   Serial.println("WiFi connected as");
-//   Serial.print(WiFi.localIP());
+  // Wait until the wifi is connected
+  while(WiFi.status() != WL_CONNECTED) {
+      delay(500);
+      Serial.print(".");
+  }
+  Serial.println("WiFi connected as");
+  Serial.print(WiFi.localIP());
   
-// }
+}
 
-// void pingHandler (const char *command) {
-//   Serial.println("PONG");
-// }
 
-// void echoHandler () {
-//   char *arg;
-//   arg = sCmd.next();
-//   if (arg != NULL)
-//     Serial.println(arg);
-//   else
-//     Serial.println("nothing to echo");
-// }
+void pingHandler () {
+  char *arg;
+  arg = sCmd.next();
+  if (arg != NULL)
+    send_package(arg);
+  else
+    Serial.println("PONG");
+}
 
-// void loop() {
+void loop() {
+  if (Serial.availible() > 0) sCmd.readSerial();
+}
 
-//   if (Serial.availible() > 0) sCmd.readSerial();
 
-//   int x = analogRead(36) + 10;  // x input - adding 10 so that we never send a 0 and mess up the receive function with a null termination
-//   float x_value = (float) x;    // convert value to float
-//   byte x_byte = (byte) x_value; // cast it as a byte
+// Helper function for sending
+void send_package(byte received_byte) {
+  // Store byte values in buffer and null terminate
+  sendBuffer[0] = received_byte;
+  sendBuffer[1] = 0;
   
-//   int y = analogRead(39) + 10;  // y input - adding 10 so that we never send a 0 and mess up the receive function with a null termination
-//   float y_value = (float) y;    // convert value to float
-//   byte y_byte = (byte) y_value; // cast it as a byte
-
-//   send_package(x_byte, y_byte);
-// }
-
-
-// // Helper function for sending
-// void send_package(byte x_value, byte y_value) {
-//   // Store byte values in buffer and null terminate
-//   sendBuffer[0] = x_value;
-//   sendBuffer[1] = y_value;
-//   sendBuffer[2] = 0;
-  
-//   // Send packet to IP target
-//   UDPTestServer.beginPacket(targetIPaddress, sendPort);
-//   UDPTestServer.printf("%s", sendBuffer);
-//   UDPTestServer.endPacket();
-
-//   // // Print contents of buffer to serial monitor for debugging
-//   // Serial.println("The x value is: ");
-//   // Serial.println(x_value);
-//   // Serial.println();
-//   // Serial.println("The y value is: ");
-//   // Serial.println(y_value);
-// }
+  // Send packet to IP target
+  UDPTestServer.beginPacket(targetIPaddress, sendPort);
+  UDPTestServer.printf("%s", sendBuffer);
+  UDPTestServer.endPacket();
+}
 
