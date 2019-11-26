@@ -16,8 +16,8 @@ int out1 = 0;
 int out2 = 0;
 
 // Setting up the packets for sending and receiving
-const int UDP_PACKET_SIZE = 1;
-char sendBuffer[UDP_PACKET_SIZE];
+// const int UDP_PACKET_SIZE = 1;
+// char sendBuffer[UDP_PACKET_SIZE];
 
 void setup() {
 
@@ -34,20 +34,31 @@ void setup() {
   servo2.attach(servo2Pin);
   servo2.write(0);
 
-  sCmd.addCommand("PING", pingHandler);
+  sCmd.addCommand("PING1", ping1Handler);
+  sCmd.addCommand("PING2", ping2Handler);
   
 }
 
+// More robust function. Can take in values after just Ping and handle them
+// void pingHandler () {
+//   char *arg;
+//   arg = sCmd.next();
+//   if (arg != NULL) {
+//     handle_package(arg);
+//     Serial.print("sent"); Serial.println(arg);
+//   } else {
+//     Serial.println("PONG");
+//   }
+// }
 
-void pingHandler () {
-  char *arg;
-  arg = sCmd.next();
-  if (arg != NULL) {
-    handle_package(arg);
-    Serial.print("sent"); Serial.println(arg);
-  } else {
-    Serial.println("PONG");
-  }
+void ping1Handler() {
+  out1 = 180;
+  Serial.println("PONG1");
+}
+
+void ping2Handler() {
+  out2 = 180;
+  Serial.println("PONG2");
 }
 
 
@@ -56,22 +67,25 @@ void loop() {
     Serial.println("collision detected");
     sCmd.readSerial();
   }
-  Serial.println("waiting...");
-  delay(1000);
+  servo1.write(out1);
+  servo2.write(out2);
+  out1 = 0;
+  out2 = 0;
+  delay(100);
+  // Serial.println("waiting...");
 }
 
 
 // Helper function for sending
-void handle_package(char *string) {
-  if (strcmp(*string,"1") == 0) {
-      out1 = 180;
-  } else if (!strcmp(*string,"2") == 0) {
-      out2 = 180;
-  }
-  // Output values to motor
-  servo1.write(out1);
-  servo2.write(out2);
-  delay(1000);
-  out1 = 0;
-  out2 = 0;
-} 
+// void handle_package(char *string) {
+//   if (strcmp(*string,"1") == 0) {
+//       out1 = 180;
+//   } else if (!strcmp(*string,"2") == 0) {
+//       out2 = 180;
+//   }
+//   // Output values to motor
+//   servo1.write(out1);
+//   servo2.write(out2);
+//   out1 = 0;
+//   out2 = 0;
+// } 
