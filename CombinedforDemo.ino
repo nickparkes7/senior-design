@@ -11,7 +11,7 @@ SerialCommand sCmd;
 Servo servo1;
 Servo servo2; 
 int servo1Pin = 5;
-int servo2Pin = 6;
+int servo2Pin = 3;
 int out1 = 0;
 int out2 = 0;
 
@@ -52,7 +52,7 @@ void setup() {
 // }
 
 void ping1Handler() {
-  out1 = 180;
+  out1 = 170;
   Serial.println("PONG1");
 }
 
@@ -71,7 +71,7 @@ void loop() {
   servo2.write(out2);
   out1 = 0;
   out2 = 0;
-  delay(100);
+  delay(1000);
   // Serial.println("waiting...");
 }
 
